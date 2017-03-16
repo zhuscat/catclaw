@@ -1,0 +1,16 @@
+{
+  "name": "catclaw",
+  "version": "0.0.1",
+  "description": "Yet another web crawler for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zhuscat",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "path-to-regexp": "^1.7.0",
+    "request": "^2.81.0"
+  }
+}
