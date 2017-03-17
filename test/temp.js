@@ -21,7 +21,7 @@ var clawer = new CatClaw({
   hostsRestricted: ['book.douban.com', 'movie.douban.com']
 });
 
-clawer.use('https://book.douban.com/tag/%E5%B0%8F%E8%AF%B4?start=:pagenumber', function(err, res, utils) {
+clawer.use('https://book.douban.com/tag/%E5%B0%8F%E8%AF%B4?start=:pagenumber', function(err, res, helper) {
   if (err) {
     console.log('error');
     return;
@@ -31,7 +31,7 @@ clawer.use('https://book.douban.com/tag/%E5%B0%8F%E8%AF%B4?start=:pagenumber', f
     console.log($(ele).attr('title'));
   });
   $('.paginator a').each((idx, ele) => {
-    utils.add($(ele).attr('href'));
+    helper.add($(ele).attr('href'));
   });
 });
 
