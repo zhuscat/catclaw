@@ -7,6 +7,7 @@ const SimpleQueue = require('./simpleQueue');
 const SimpleSeen = require('./simpleSeen');
 const utils = require('./utils');
 const userAgents = require('./userAgents.json');
+const iconv = require('iconv-lite');
 
 /*
 options
@@ -36,7 +37,10 @@ function CatClaw(options) {
   this.drain = options.drain;
   // 可以替换 seen，只要接口一致
   this.seen = options.seen || new SimpleSeen();
+  this.seenEnable = options.seenEnable || true;
   this.hostsRestricted = options.hostsRestricted;
+  this.referer = options.referer;
+  this.encoding = options.encoding || 'utf8';
 }
 
 CatClaw.prototype.start = function start() {
@@ -59,6 +63,10 @@ CatClaw.prototype.request = function myrequest(urlItem) {
   requestOptions.headers = {
     'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)],
   };
+  if (this.referer) {
+    requestOptions.headers.referer = this.referer;
+  }
+  requestOptions.encoding = null;
   if (this.timeout) {
     requestOptions.timeout = this.timeout;
   }
@@ -80,6 +88,8 @@ CatClaw.prototype.request = function myrequest(urlItem) {
         this._queue.enqueue(urlItem);
       }
     } else if (res.body) {
+      console.log(res);
+      res.body = iconv.decode(res.body, this.encoding);
       $ = cheerio.load(res.body);
       res.$ = $;
     }
@@ -109,11 +119,13 @@ CatClaw.prototype.add = function add(fromUrl, toUrlOption) {
     return;
   }
   // now it's simply judge if two url are the same (not compare request `body`, `method` etc.)
-  if (this.seen.add(encodedUrl)) {
-    this._queue.enqueue({
-      url: encodedUrl,
-      retries: 0,
-    });
+  if (this.seenEnable) {
+    if (this.seen.add(encodedUrl)) {
+      this._queue.enqueue({
+        url: encodedUrl,
+        retries: 0,
+      });
+    }
   }
 };
 
