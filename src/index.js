@@ -88,7 +88,6 @@ CatClaw.prototype.request = function myrequest(urlItem) {
         this._queue.enqueue(urlItem);
       }
     } else if (res.body) {
-      console.log(res);
       res.body = iconv.decode(res.body, this.encoding);
       $ = cheerio.load(res.body);
       res.$ = $;
@@ -110,6 +109,9 @@ CatClaw.prototype.use = function use(path, action) {
 };
 
 CatClaw.prototype.add = function add(fromUrl, toUrlOption) {
+  if (!toUrlOption) {
+    return;
+  }
   const toUrlItem = utils.optionToUrlItem(toUrlOption);
   const resolvedUrl = url.resolve(fromUrl, toUrlItem.url);
   const encodedUrl = encodeURI(resolvedUrl);
