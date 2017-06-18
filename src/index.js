@@ -143,11 +143,12 @@ CatClaw.prototype.add = function add(fromUrl, toUrlOption) {
   // now it's simply judge if two url are the same (not compare request `body`, `method` etc.)
   if (this.seenEnable) {
     if (this.seen.add(encodedUrl)) {
-      console.log(`[INFO] skip duplicate url: ${encodedUrl}`);
       this._queue.enqueue({
         url: encodedUrl,
         retries: 0,
       });
+    } else {
+      console.log(`[INFO] skip duplicate url: ${encodedUrl}`);
     }
   } else {
     this._queue.enqueue({
